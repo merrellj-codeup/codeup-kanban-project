@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import './components/Layout/normalize.css';
+import { useState } from 'react';
+import styled, { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { ThemeProvider, themes, useTheme } from './context/ThemeContext';
+import { PageWrapper, Container, Row, Column } from './components/Layout';
+import Header from './components/Header';
+import SideNav from './components/SideNav';
 
-function App() {
+const App = () => {
+  const { theme } = useTheme();
+  const [sidebarClosed, setSidebarClosed] = useState(false);
+    const handleSidebarToggle = () => {
+        setSidebarClosed(!sidebarClosed);
+    }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StyledThemeProvider theme={themes[theme]}>
+      <PageWrapper>
+        <Header sidebarClosed={sidebarClosed}/>
+        <Main as="main" padding="0px" className="grow">
+          <Row className="full-width grow no-padding no-gap">
+            <SideNav themeMode={theme} sidebarClosed={sidebarClosed} handleSidebarToggle={handleSidebarToggle} />
+            <Content></Content>
+          </Row>
+        </Main>
+      </PageWrapper>
+    </StyledThemeProvider>
   );
 }
 
-export default App;
+const Main = styled(Container)``
+
+const Content = styled(Column)``
+
+
+
+export default () => (
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
+);
